@@ -124,6 +124,5 @@ class LinkedInkApp {
 }
 
 const linkedInkApp = new LinkedInkApp();
-linkedInkApp.start();
 module.exports = linkedInkApp.app;
 module.exports.handler = linkedInkApp.exportServerless();
