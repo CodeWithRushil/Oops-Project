@@ -14,7 +14,7 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 - ✍️ **Instant Post Generator** – Convert your ideas into polished LinkedIn posts  
 - 🧠 **AI Hashtag Suggestions** – Boost visibility with relevant, smart hashtags  
 - 📱 **Responsive Design** – Fully mobile-friendly and clean UI  
-- ⚙️ **Gemini-Powered Backend** – Smart content generation logic  
+- ⚙️ **OpenRouter-Powered Backend** – Smart content generation logic  
 - 🔒 **Secure API Integration** – Environment variable-based API key handling
 
 ---
@@ -36,7 +36,7 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 - Node.js  
 - Express.js  
 - Axios  
-- Google Gemini API  
+- OpenRouter API  
 
 **Deployment:**  
 - Vercel
@@ -44,6 +44,7 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 ---
 
 🙌 Acknowledgements
+- [OpenRouter API](https://openrouter.ai/mistralai/mistral-7b-instruct)
 - [TailwindCSS](https://tailwindcss.com)  
 - [Flowbite](https://flowbite.com)
 
