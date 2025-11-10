@@ -1,0 +1,129 @@
+const express = require("express");
+const axios = require("axios");
+const serverless = require("serverless-http");
+const path = require("path");
+require("dotenv").config();
+
+class AIService {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.baseURL = "https://openrouter.ai/api/v1/chat/completions";
+  }
+
+  getHeaders() {
+    return {
+      Authorization: `Bearer ${this.apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "LinkedInk",
+    };
+  }
+
+  async generatePost(topic, tone) {
+    const body = {
+      model: "mistralai/mistral-7b-instruct",
+      messages: [
+        { role: "system", content: "You are a professional LinkedIn post writer." },
+        {
+          role: "user",
+          content: `Write a ${tone.toLowerCase()} LinkedIn post about: ${topic}. Add an emoji before starting the title text. Keep it formatted as a professional post with required spaces and newlines, also add newline before starting the hashtags and don't add emojis in hashtags. Limit hashtags to 10 only. All this in approximately 100 words.`,
+        },
+      ],
+      max_tokens: 200,
+      temperature: 0.7,
+    };
+    const res = await axios.post(this.baseURL, body, { headers: this.getHeaders() });
+    return res.data.choices[0].message.content.trim();
+  }
+
+  async generateHashtags(topic) {
+    const body = {
+      model: "mistralai/mistral-7b-instruct",
+      messages: [
+        { role: "system", content: "You are a professional LinkedIn content strategist." },
+        {
+          role: "user",
+          content: `Give me a list of 21 trending and relevant LinkedIn hashtags for: ${topic}. Return the hashtags seperated by spaces in a single string without any commas.`,
+        },
+      ],
+      max_tokens: 300,
+      temperature: 0.7,
+    };
+    const res = await axios.post(this.baseURL, body, { headers: this.getHeaders() });
+    return res.data.choices[0].message.content.trim();
+  }
+}
+
+class AppRouter {
+  constructor(aiService) {
+    this.router = express.Router();
+    this.aiService = aiService;
+    this.initRoutes();
+  }
+
+  initRoutes() {
+    this.router.get("/", (req, res) => res.render("index"));
+    this.router.get("/generate-post", (req, res) => res.render("postForm"));
+    this.router.get("/generate-hashtags", (req, res) => res.render("hashtagForm"));
+    this.router.get("/about-us", (req, res) => res.render("about"));
+    this.router.get("/why-linkedink", (req, res) => res.render("why"));
+    this.router.get("/privacy-policy", (req, res) => res.render("privacy"));
+    this.router.get("/terms", (req, res) => res.render("terms"));
+
+    this.router.post("/generate-post", async (req, res) => {
+      const { topic, tone } = req.body;
+      try {
+        const postContent = await this.aiService.generatePost(topic, tone);
+        res.render("postResult", { postContent });
+      } catch {
+        res.render("error");
+      }
+    });
+
+    this.router.post("/generate-hashtags", async (req, res) => {
+      const { topic } = req.body;
+      try {
+        const hashtags = await this.aiService.generateHashtags(topic);
+        res.render("hashtagResult", { hashtags });
+      } catch {
+        res.render("error");
+      }
+    });
+
+    this.router.use((req, res) => res.status(404).render("404"));
+  }
+}
+
+class LinkedInkApp {
+  constructor() {
+    this.app = express();
+    this.config();
+    this.routes();
+  }
+
+  config() {
+    this.app.set("view engine", "ejs");
+    this.app.set("views", path.join(__dirname, "views"));
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.static(path.join(__dirname, "public")));
+  }
+
+  routes() {
+    const aiService = new AIService(process.env.OPENROUTER_API_KEY);
+    const appRouter = new AppRouter(aiService);
+    this.app.use("/", appRouter.router);
+  }
+
+  start(port = 3000) {
+    this.app.listen(port, () => console.log(`Server running on port ${port}`));
+  }
+
+  exportServerless() {
+    return serverless(this.app);
+  }
+}
+
+const linkedInkApp = new LinkedInkApp();
+linkedInkApp.start();
+module.exports = linkedInkApp.app;
+module.exports.handler = linkedInkApp.exportServerless();
