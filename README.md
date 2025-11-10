@@ -49,5 +49,4 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 
 ---
 
-💡 Whether you're a student, a developer, or a working professional — LinkedInk helps you create better LinkedIn content, faster.
-
+💡 Made by: Rushil Sharma and Aditya Suri
