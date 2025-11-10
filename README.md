@@ -49,4 +49,4 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 
 ---
 
-💡 Made by: Rushil Sharma and Aditya Suri
+💡 Made by: Rushil Sharma & Aditya Suri
