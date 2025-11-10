@@ -1,6 +1,6 @@
 # LinkedInk — AI-Powered LinkedIn Post & Hashtag Generator
 
-[![Vercel Deploy](https://img.shields.io/badge/Live-Demo-00C7B7?color=purple&logo=vercellogoColor=white)](https://linkedink.vercel.app/)
+[![Vercel Deploy](https://img.shields.io/badge/Live-Demo-00C7B7?color=purple&logo=vercellogoColor=white)](https://linkedink-oops.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-crimson.svg)](#)
 
 LinkedInk is a full-stack web app that helps professionals, creators, and students **generate high-quality LinkedIn posts and tailored hashtags instantly** using AI.
@@ -14,14 +14,14 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 - ✍️ **Instant Post Generator** – Convert your ideas into polished LinkedIn posts  
 - 🧠 **AI Hashtag Suggestions** – Boost visibility with relevant, smart hashtags  
 - 📱 **Responsive Design** – Fully mobile-friendly and clean UI  
-- ⚙️ **OpenRouter-Powered Backend** – Smart content generation logic  
+- ⚙️ **Gemini-Powered Backend** – Smart content generation logic  
 - 🔒 **Secure API Integration** – Environment variable-based API key handling
 
 ---
 
 ## 🖼️ Live Demo
 
-🔗 [https://linkedink.vercel.app/](https://linkedink.vercel.app/)
+🔗 [https://linkedink-oops.vercel.app/](https://linkedink-oops.vercel.app/)
 
 ---
 
@@ -36,20 +36,14 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 - Node.js  
 - Express.js  
 - Axios  
-- OpenRouter API  
+- Google Gemini API  
 
 **Deployment:**  
 - Vercel
 
 ---
 
-## 📄 License
-This project is licensed under the MIT License.
-
----
-
 🙌 Acknowledgements
-- [OpenRouter API](https://openrouter.ai/mistralai/mistral-7b-instruct)  
 - [TailwindCSS](https://tailwindcss.com)  
 - [Flowbite](https://flowbite.com)
 
