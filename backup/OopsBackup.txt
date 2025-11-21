@@ -4,12 +4,11 @@ const serverless = require("serverless-http");
 const path = require("path");
 require("dotenv").config();
 
-class AIService {
-  constructor(apiKey) {
+class BaseService {
+  constructor(apiKey, baseURL) {
     this.apiKey = apiKey;
-    this.baseURL = "https://openrouter.ai/api/v1/chat/completions";
+    this.baseURL = baseURL;
   }
-
   getHeaders() {
     return {
       Authorization: `Bearer ${this.apiKey}`,
@@ -18,12 +17,32 @@ class AIService {
       "X-Title": "LinkedInk",
     };
   }
+  async postRequest(body) {
+    try {
+      const res = await axios.post(this.baseURL, body, {
+        headers: this.getHeaders(),
+      });
+      return res.data.choices[0].message.content.trim();
+    } catch (error) {
+      console.error("API Error:", error.message);
+      throw error;
+    }
+  }
+}
+
+class AIService extends BaseService {
+  constructor(apiKey) {
+    super(apiKey, "https://openrouter.ai/api/v1/chat/completions");
+  }
 
   async generatePost(topic, tone) {
     const body = {
       model: "mistralai/mistral-7b-instruct",
       messages: [
-        { role: "system", content: "You are a professional LinkedIn post writer." },
+        {
+          role: "system",
+          content: "You are a professional LinkedIn post writer.",
+        },
         {
           role: "user",
           content: `Write a ${tone.toLowerCase()} LinkedIn post about: ${topic}. Add an emoji before starting the title text. Keep it formatted as a professional post with required spaces and newlines, also add newline before starting the hashtags and don't add emojis in hashtags. Limit hashtags to 10 only. All this in approximately 100 words.`,
@@ -32,25 +51,26 @@ class AIService {
       max_tokens: 200,
       temperature: 0.7,
     };
-    const res = await axios.post(this.baseURL, body, { headers: this.getHeaders() });
-    return res.data.choices[0].message.content.trim();
+    return await this.postRequest(body);
   }
 
   async generateHashtags(topic) {
     const body = {
       model: "mistralai/mistral-7b-instruct",
       messages: [
-        { role: "system", content: "You are a professional LinkedIn content strategist." },
+        {
+          role: "system",
+          content: "You are a professional LinkedIn content strategist.",
+        },
         {
           role: "user",
-          content: `Give me a list of 21 trending and relevant LinkedIn hashtags for: ${topic}. Return the hashtags seperated by spaces in a single string without any commas.`,
+          content: `Give me a list of 21 trending and relevant LinkedIn hashtags for: ${topic}. Return the hashtags separated by spaces in a single string without commas.`,
         },
       ],
       max_tokens: 300,
       temperature: 0.7,
     };
-    const res = await axios.post(this.baseURL, body, { headers: this.getHeaders() });
-    return res.data.choices[0].message.content.trim();
+    return await this.postRequest(body);
   }
 }
 
@@ -64,7 +84,9 @@ class AppRouter {
   initRoutes() {
     this.router.get("/", (req, res) => res.render("index"));
     this.router.get("/generate-post", (req, res) => res.render("postForm"));
-    this.router.get("/generate-hashtags", (req, res) => res.render("hashtagForm"));
+    this.router.get("/generate-hashtags", (req, res) =>
+      res.render("hashtagForm")
+    );
     this.router.get("/about-us", (req, res) => res.render("about"));
     this.router.get("/why-linkedink", (req, res) => res.render("why"));
     this.router.get("/privacy-policy", (req, res) => res.render("privacy"));
