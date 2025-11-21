@@ -18,7 +18,7 @@ No more staring at a blank post box. Just enter your input — get an optimized 
 
 ---
 
-## 🖼️ Live Demo
+## 🖼️ Live Link
 
 🔗 [https://linkedink-oops.vercel.app/](https://linkedink-oops.vercel.app/)
 
